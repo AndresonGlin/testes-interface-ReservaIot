@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, shareReplay, tap } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,14 @@ export class AuthService {
   
   private http = inject(HttpClient);
   private router = inject(Router);
-  private readonly API = ''
+  private readonly API = `${environment.apiUrl}`;
 
-  private _user = signal<any | null>(null);
+  _user = signal<any | null>(null);
 
-  isAuthenticated = computed(() => !!this._user());
+  isAuthenticated = computed(() => {
+    return !!localStorage.getItem('access_token');
+  });
+
 
   constructor() {
     this.restoreSession();
@@ -25,6 +29,8 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
+    console.log(credentials)
+    console.log(`${this.API}/login`)
     return this.http.post<any>(`${this.API}/login`, credentials).pipe(
       tap(res => this.setSession(res)),
       shareReplay()
@@ -32,10 +38,14 @@ export class AuthService {
   }
 
   private setSession(authRes: any) {
-    localStorage.setItem('access_token', authRes.accessToken);
-    localStorage.setItem('refresh_token', authRes.refreshToken);
-    this._user.set(authRes.user);
+    const { tokenAccess, tokenRefresh } = authRes.tokens;
+
+    localStorage.setItem('access_token', tokenAccess);
+    localStorage.setItem('refresh_token', tokenRefresh);
+
+    this._user.set({ authenticated: true });
   }
+
 
   logout() {
     localStorage.removeItem('access_token');
@@ -48,19 +58,30 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  private restoreSession() {
-    const token = this.getAccessToken();
-    if (token) {
-      // validar o token ou buscar o perfil
-      this._user.set({ token }); 
+    private restoreSession() {
+      const token = this.getAccessToken();
+      if (token) {
+        this._user.set({ authenticated: true });
+      }
     }
-  }
 
-  refreshToken(): Observable<any> {
-    const refresh = localStorage.getItem('refresh_token');
-    return this.http.post(`${this.API}/refresh`, { refresh }).pipe(
-      tap((res: any) => localStorage.setItem('access_token', res.access))
-    );
-  }
+
+    refreshToken(): Observable<any> {
+      const refreshToken = localStorage.getItem('refresh_token');
+
+      return this.http.post<any>(`${this.API}/refresh`, {
+        refreshToken
+      }).pipe(
+        tap(res => {
+          localStorage.setItem('access_token', res.tokenAccess);
+
+          if (res.tokenRefresh) {
+            localStorage.setItem('refresh_token', res.tokenRefresh);
+          }
+
+          this._user.set({ authenticated: true });
+        })
+      );
+    }
 
 }

@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -20,7 +21,7 @@ export class Login {
 
   loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    senha: ['', [Validators.required, Validators.minLength(6)]]
   })
 
   onSubmit() {
@@ -28,12 +29,16 @@ export class Login {
 
     this.isLoading.set(true);
     this.authService.login(this.loginForm.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: (err: any) => {
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
         this.errorMessage.set('Credenciais inválidas ou erro no servidor.');
         this.isLoading.set(false);
       }
     });
+
   }
 }
 

@@ -1,0 +1,65 @@
+<div class="space-y-8 p-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-sm text-slate-500">Áreas Monitoradas</p>
+      <h3 class="text-3xl font-bold">{{ totalAreas }}</h3>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-sm text-slate-500">Dispositivos Ativos</p>
+      <h3 class="text-3xl font-bold">128</h3>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+      <p class="text-sm text-slate-500">Temp. Média</p>
+      <h3 class="text-3xl font-bold">26.4°C</h3>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border shadow-sm ring-2 ring-red-500/30">
+      <p class="text-sm text-slate-500">Alertas</p>
+      <h3 class="text-3xl font-bold text-red-600">
+        {{ totalAlertas() }}
+      </h3>
+    </div>
+
+  </div>
+
+  <div class="bg-white p-8 rounded-3xl border shadow-sm">
+
+    <h3 class="text-xl font-bold mb-4">
+      Tendência Térmica da Reserva
+    </h3>
+
+    <apx-chart
+      [series]="series"
+      [chart]="chartOptions.chart"
+      [xaxis]="{ categories: labels }"
+      [stroke]="chartOptions.stroke"
+      [colors]="chartOptions.colors"
+      [dataLabels]="chartOptions.dataLabels"
+      [grid]="chartOptions.grid"
+      [tooltip]="chartOptions.tooltip">
+    </apx-chart>
+
+  </div>
+
+  <div class="bg-white p-6 rounded-2xl border shadow-sm">
+    <h3 class="font-bold mb-4">Áreas Críticas</h3>
+
+    <div class="space-y-3">
+      @for (area of areaService.areas(); track area.id) {
+        <div class="p-4 bg-slate-50 rounded-xl">
+          <p class="font-bold">{{ area.nome }}</p>
+          <p class="text-xs text-slate-500">{{ area.bioma }}</p>
+        </div>
+      } @empty {
+        <p class="text-slate-400 italic">
+          Nenhuma área carregada (401).
+        </p>
+      }
+    </div>
+  </div>
+
+</div>
