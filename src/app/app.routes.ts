@@ -16,8 +16,16 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {
-                path: 'dashboard',
+                path: '',
                 loadComponent: () => import('./features/dashboard/global-dashboard/global-dashboard').then(m => m.GlobalDashboard)
+            },
+            {
+                path: "areas",
+                loadComponent: () => import('./features/dashboard/crud-area/crud-area').then(m => m.CrudArea)
+            },
+            {
+                path: "sensors",
+                loadComponent: () => import('./features/dashboard/crud-sensor/crud-sensor').then(m => m.CrudSensorComponent)
             }
         ]
     },

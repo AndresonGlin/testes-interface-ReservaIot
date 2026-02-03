@@ -30,8 +30,9 @@ export class Login {
     this.isLoading.set(true);
     this.authService.login(this.loginForm.getRawValue()).subscribe({
       next: () => {
+        console.log('wwew')
         this.isLoading.set(false);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['']);
       },
       error: () => {
         this.errorMessage.set('Credenciais inválidas ou erro no servidor.');

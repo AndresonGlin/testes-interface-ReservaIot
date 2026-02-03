@@ -66,22 +66,18 @@ export class AuthService {
     }
 
 
-    refreshToken(): Observable<any> {
-      const refreshToken = localStorage.getItem('refresh_token');
+  refreshToken(): Observable<any> {
+    const refreshToken = localStorage.getItem('refresh_token');
 
-      return this.http.post<any>(`${this.API}/refresh`, {
-        refreshToken
-      }).pipe(
-        tap(res => {
-          localStorage.setItem('access_token', res.tokenAccess);
+    return this.http.post<any>(`${this.API}/refresh`, {
+      refreshToken
+    }).pipe(
+      tap(res => {
+        localStorage.setItem('access_token', res.accessToken);
+        localStorage.setItem('refresh_token', res.refreshToken);
+      })
+    );
+  }
 
-          if (res.tokenRefresh) {
-            localStorage.setItem('refresh_token', res.tokenRefresh);
-          }
-
-          this._user.set({ authenticated: true });
-        })
-      );
-    }
 
 }

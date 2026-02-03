@@ -1,0 +1,77 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold">Áreas</h1>
+
+  <button
+    (click)="toggleForm()"
+    class="bg-emerald-600 text-white px-4 py-2 rounded-xl">
+    + Nova Área
+  </button>
+</div>
+
+@if (showForm()) {
+  <div class="bg-white p-6 rounded-xl shadow mb-8">
+    <h2 class="font-bold mb-4">Cadastrar Área</h2>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()" class="grid grid-cols-2 gap-4">
+
+      <input class="input" placeholder="Nome" formControlName="nome" />
+      <select class="input" formControlName="bioma">
+        <option value="">Bioma</option>
+        @for (b of biomas; track b) {
+          <option [value]="b">{{ b }}</option>
+        }
+      </select>
+
+      <input type="number" class="input" placeholder="Latitude" formControlName="latitude" />
+      <input type="number" class="input" placeholder="Longitude" formControlName="longitude" />
+
+      <input type="number" class="input" placeholder="Largura" formControlName="largura" />
+      <input type="number" class="input" placeholder="Comprimento" formControlName="comprimento" />
+
+      <textarea class="input col-span-2" placeholder="Descrição" formControlName="descricao"></textarea>
+
+      <div class="col-span-2 flex gap-3">
+        <button
+          type="submit"
+          [disabled]="form.invalid"
+          class="bg-emerald-600 text-white px-4 py-2 rounded-xl">
+          Salvar
+        </button>
+
+        <button type="button" (click)="toggleForm()" class="text-slate-500">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+}
+
+<div class="bg-white rounded-xl shadow">
+  <table class="w-full">
+    <thead class="bg-slate-100">
+      <tr>
+        <th class="p-3 text-left">Nome</th>
+        <th class="p-3 text-center">Bioma</th>
+        <th class="p-3 text-center">Dimensões</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (area of areas(); track area.id) {
+        <tr class="border-t">
+          <td class="p-3">{{ area.nome }}</td>
+          <td class="p-3 text-center">{{ area.bioma }}</td>
+          <td class="p-3 text-center">
+            {{ area.largura }} x {{ area.comprimento }}
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="3" class="p-6 text-center text-slate-400">
+            Nenhuma área cadastrada
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

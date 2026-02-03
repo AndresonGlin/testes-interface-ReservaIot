@@ -14,11 +14,10 @@ export class AreaService {
   private http = inject(HttpClient);
   private readonly API = `${environment.apiUrl}/area`;
 
-  // State Management com Signals
   private _areas = signal<Area[]>([]);
   readonly areas = this._areas.asReadonly();
 
-  // --- MÉTODOS DE ÁREA ---
+
 
   listarAreas(): Observable<Area[]> {
     return this.http.get<Area[]>(this.API).pipe(
@@ -36,19 +35,7 @@ export class AreaService {
     );
   }
 
-  // --- MÉTODOS DE SENSORES (Relacionados à Área) ---
-
-  listarSensoresPorArea(areaId: string): Observable<Sensor[]> {
-    return this.http.get<Sensor[]>(`${this.API}/${areaId}/sensores`);
-  }
-
-  cadastrarSensor(sensor: Sensor): Observable<Sensor> {
-    return this.http.post<Sensor>(`${environment.apiUrl}/sensores`, sensor);
-  }
-
-  // --- MÉTODOS DE LEITURA ---
-
-  buscarLeiturasSensor(sensorId: string): Observable<Leitura[]> {
-    return this.http.get<Leitura[]>(`${environment.apiUrl}/sensores/${sensorId}/leituras`);
+  sensorAtivoPorArea(id: string) {
+    return this.http.get<any>(`${this.API}/sensor/${id}`)
   }
 }
