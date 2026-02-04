@@ -40,7 +40,9 @@ export class CrudSensorComponent {
 
   load() {
     this.sensorService.listar().subscribe({
-      next: res => this.sensores.set(res),
+      next: res => {
+        this.sensores.set(res)
+      },
       error: err => console.error('Erro listar sensores', err)
     });
 
@@ -48,6 +50,7 @@ export class CrudSensorComponent {
       next: res => this.areas.set(res),
       error: err => console.error('Erro listar áreas', err)
     });
+
   }
 
   toggleForm() {
