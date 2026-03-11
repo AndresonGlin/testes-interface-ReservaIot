@@ -20,7 +20,7 @@ private fb = inject(FormBuilder);
   registerForm = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
-    senha: ['', [Validators.required, Validators.minLength(6)]],
+    senha: ['', [Validators.required, Validators.minLength(8)]],
     especialidade: [''],
     titulacao: ['', [Validators.required]],
     matricula: ['', [Validators.required]],

@@ -26,6 +26,10 @@ export const routes: Routes = [
             {
                 path: "sensors",
                 loadComponent: () => import('./features/dashboard/crud-sensor/crud-sensor').then(m => m.CrudSensorComponent)
+            },
+            {
+                path: "pesquisadores",
+                loadComponent: () => import('./features/dashboard/crud-pesquisador/crud-pesquisador').then(m => m.CrudPesquisador)
             }
         ]
     },

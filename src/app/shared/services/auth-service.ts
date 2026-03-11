@@ -15,9 +15,7 @@ export class AuthService {
 
   _user = signal<any | null>(null);
 
-  isAuthenticated = computed(() => {
-    return !!localStorage.getItem('access_token');
-  });
+  isAuthenticated = computed(() => !!this._user());
 
 
   constructor() {
@@ -29,8 +27,6 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<any> {
-    console.log(credentials)
-    console.log(`${this.API}/login`)
     return this.http.post<any>(`${this.API}/login`, credentials).pipe(
       tap(res => this.setSession(res)),
       shareReplay()
@@ -73,8 +69,8 @@ export class AuthService {
       refreshToken
     }).pipe(
       tap(res => {
-        localStorage.setItem('access_token', res.accessToken);
-        localStorage.setItem('refresh_token', res.refreshToken);
+        localStorage.setItem('access_token', res.tokens.tokenAccess);
+        localStorage.setItem('refresh_token', res.tokens.tokenRefresh);
       })
     );
   }

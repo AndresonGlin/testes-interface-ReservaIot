@@ -35,6 +35,14 @@ export class AreaService {
     );
   }
 
+  atualizarArea(id: string, area: Partial<Area>): Observable<Area> {
+    return this.http.put<Area>(`${this.API}/${id}`, area);
+  }
+
+  removerArea(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.API}/${id}`);
+  }
+
   sensorAtivoPorArea(id: string) {
     return this.http.get<any>(`${this.API}/sensor/${id}`)
   }

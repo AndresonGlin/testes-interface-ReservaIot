@@ -8,7 +8,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  if (req.url.includes('/refresh')) {
+  const isPublicEndpoint =
+    req.url.includes('/login') ||
+    req.url.includes('/register') ||
+    req.url.includes('/refresh');
+
+  if (isPublicEndpoint) {
     return next(req);
   }
 
@@ -26,7 +31,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           switchMap(res => {
             const retryReq = req.clone({
               setHeaders: {
-                Authorization: `Bearer ${res.accessToken}`
+                Authorization: `Bearer ${res.tokens.tokenAccess}`
               }
             });
             return next(retryReq);
