@@ -7,8 +7,8 @@ Este guia tem como objetivo orientar como clonar, configurar e executar o projet
 # 📦 1. Clonar o Projeto Frontend
 
 ```bash
-git clone <URL_DO_SEU_REPOSITORIO_FRONTEND>
-cd <NOME_DA_PASTA>
+git clone https://github.com/AndresonGlin/testes-interface-ReservaIot
+cd RESERVA-IOT
 ```
 
 Instale as dependências:
